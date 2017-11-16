@@ -25,9 +25,10 @@ public class WatchView extends BaseView {
     * 表盘中心
     * 同是也是 表针的旋转中心
     * */
-    private int mCirlceCenterX;
-    private int mCircleCenterY;
-    private int mHand;
+    private int mCirlceCenterX;//中心
+    private int mCircleCenterY;//中心
+    private int mValueLine;//刻度线
+    private int mHandLineStartY;
 
     public WatchView(Context context) {
         super(context);
@@ -55,10 +56,11 @@ public class WatchView extends BaseView {
         mMeasureWidth = measureHeight(widthMeasureSpec);
         mMeasureHeight = measureHeight(heightMeasureSpec);
 
-        mCicleRadius = (mMeasureHeight >= mMeasureWidth) ? mMeasureWidth / 2 - mMeasureWidth / 10 : mMeasureHeight / 2 - mMeasureHeight / 10;
+        int padding = 10;
+        mCicleRadius = (mMeasureHeight >= mMeasureWidth) ? mMeasureWidth / 2 - padding : mMeasureHeight / 2 - padding;
         mCirlceCenterX = mMeasureWidth / 2;
         mCircleCenterY = mMeasureHeight / 2;
-
+        mHandLineStartY = (mMeasureHeight >= mMeasureWidth) ? mMeasureHeight / 2 - mMeasureWidth / 2 + padding : mMeasureWidth / 2 - mMeasureHeight / 2 + padding;
     }
 
     @Override
@@ -72,7 +74,7 @@ public class WatchView extends BaseView {
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeWidth(10);
         canvas.drawCircle(mCirlceCenterX, mCircleCenterY, mCicleRadius, mPaint);
-        canvas.drawPoint(mCirlceCenterX, mCircleCenterY, mPaint);
+        canvas.drawPoint(mCirlceCenterX, mCircleCenterY, mPaint);//绘制中心点
         /*
         * 表盘上一共 60格
         * 每格代表6度，为1秒（短线）
@@ -84,33 +86,33 @@ public class WatchView extends BaseView {
         canvas.save();
         for (int i = 0; i < 360; i++) {
             if (i % 6 == 0) {
-                canvas.rotate(6, mCirlceCenterX, mCircleCenterY);
+                canvas.rotate(6, mCirlceCenterX, mCircleCenterY);//每 6 度 旋转一次画布
             }
             if (i % 30 == 0) {
                 //时针
                 Log.i(TAG, "drawWatch: " + i);
                 mPaint.setStrokeWidth(1);
-                mHand = mMeasureHeight / 15;
+                mValueLine = mMeasureHeight / 15;
                 if (i == 0) {
                     value = 12;
                 } else {
                     value = value + 1;
                 }
                 mPaint.setTextSize(20);
-                canvas.drawText(value + "", mCirlceCenterX - 10, mMeasureHeight / 10 + mHand + 20, mPaint);
+                canvas.drawText(value + "", mCirlceCenterX - 10, mHandLineStartY + mValueLine + mValueLine / 2, mPaint);
                 if (value == 12) {
                     value = 0;
                 }
             } else {
                 mPaint.setStrokeWidth(2);
-                mHand = mMeasureHeight / 30;
+                mValueLine = mMeasureHeight / 30;
             }
 
             if (i % 6 == 0) {
                 if (i % 30 == 0) {
                     mPaint.setStrokeWidth(5);
                 }
-                canvas.drawLine(mCirlceCenterX, mMeasureHeight / 10, mCirlceCenterX, mMeasureHeight / 10 + mHand, mPaint);
+                canvas.drawLine(mCirlceCenterX, mHandLineStartY, mCirlceCenterX, mHandLineStartY + mValueLine, mPaint);
             }
         }
         canvas.restore();
