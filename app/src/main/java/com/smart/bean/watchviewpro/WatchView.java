@@ -133,6 +133,7 @@ public class WatchView extends BaseView {
                     mPaint.setStrokeWidth(5);
                 }
                 canvas.drawLine(mCirlceCenterX, mHandLineStartY, mCirlceCenterX, mHandLineStartY + mValueLine, mPaint);
+                canvas.drawCircle(mCirlceCenterX,mHandLineStartY + mValueLine,5,mPaint);
             }
         }
         canvas.restore();
