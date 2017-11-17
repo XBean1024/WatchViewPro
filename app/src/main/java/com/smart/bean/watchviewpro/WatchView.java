@@ -3,8 +3,13 @@ package com.smart.bean.watchviewpro;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
+
 
 /**
  * auther   : bean
@@ -30,15 +35,26 @@ public class WatchView extends BaseView {
     private int mValueLine;//刻度线
     private int mHandLineStartY;
 
+    Animation mRotateAnimation;
+    private Handler mHandler;
     public WatchView(Context context) {
         super(context);
         init(context);
     }
 
     private void init(Context context) {
+        mContext = context;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(10);
+        mHandler = new Handler();
+        startAnimation();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+//                startAnimation();
+            }
+        },5000);
     }
 
     public WatchView(Context context, AttributeSet attrs) {
@@ -50,6 +66,10 @@ public class WatchView extends BaseView {
         init(context);
     }
 
+    public void startAnimation(){
+        mRotateAnimation =  AnimationUtils.loadAnimation(mContext,R.anim.rotate);
+        this.startAnimation(mRotateAnimation);
+    }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);

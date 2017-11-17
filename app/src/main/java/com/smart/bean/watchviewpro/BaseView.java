@@ -16,6 +16,7 @@ import android.view.View;
 public class BaseView extends View {
     public final String TAG = this.getClass().getSimpleName();
     protected Paint mPaint;
+    protected Context mContext;
     protected int mViewWidth;
     protected int mViewHeight;
     public BaseView(Context context) {
